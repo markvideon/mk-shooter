@@ -32,8 +32,8 @@ namespace CompleteProject
         void FixedUpdate ()
         {
             // Store the input axes.
-            float h = CrossPlatformInputManager.GetAxisRaw("Horizontal");
-            float v = CrossPlatformInputManager.GetAxisRaw("Vertical");
+            float h = CrossPlatformInputManager.GetAxisRaw("MoveX");
+            float v = CrossPlatformInputManager.GetAxisRaw("MoveY");
 
             // Move the player around the scene.
             Move (h, v);
@@ -84,7 +84,7 @@ namespace CompleteProject
                 playerRigidbody.MoveRotation (newRotatation);
             }
 #else
-            Vector3 moveDir = new Vector3(CrossPlatformInputManager.GetAxisRaw("Horizontal") , 0f , CrossPlatformInputManager.GetAxisRaw("Vertical"));
+            Vector3 moveDir = new Vector3(CrossPlatformInputManager.GetAxisRaw("MoveX") , 0f , CrossPlatformInputManager.GetAxisRaw("MoveY"));
 			Vector3 fireDir = new Vector3(CrossPlatformInputManager.GetAxisRaw("FireX") , 0f , CrossPlatformInputManager.GetAxisRaw("FireY"));
 
 			if (fireDir == Vector3.zero) {
@@ -116,6 +116,7 @@ namespace CompleteProject
 				// Set the player's rotation to this new rotation.
 				playerRigidbody.MoveRotation(newRotatation);
 			}
+
 
 #endif
         }

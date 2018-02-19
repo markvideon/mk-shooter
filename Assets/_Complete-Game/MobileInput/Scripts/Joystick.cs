@@ -14,8 +14,8 @@ public class Joystick : MonoBehaviour , IPointerUpHandler , IPointerDownHandler 
     }
 
     public AxisOption axesToUse = AxisOption.Both;   // The options for the axes that the still will use
-    public string horizontalAxisName = "Horizontal";// The name given to the horizontal axis for the cross platform input
-    public string verticalAxisName = "Vertical";    // The name given to the vertical axis for the cross platform input 
+    public string horizontalAxisName;// The name given to the horizontal axis for the cross platform input
+    public string verticalAxisName;    // The name given to the vertical axis for the cross platform input 
 
     private Vector3 startPos;
     private bool useX;                                                          // Toggle for using the x axis
@@ -57,7 +57,6 @@ public class Joystick : MonoBehaviour , IPointerUpHandler , IPointerDownHandler 
 
 
     public void OnDrag(PointerEventData data) {
-
         Vector3 newPos = Vector3.zero;
 
         if (useX) {
@@ -72,6 +71,15 @@ public class Joystick : MonoBehaviour , IPointerUpHandler , IPointerDownHandler 
             delta = Mathf.Clamp(delta, -MovementRange,  MovementRange);
             newPos.y = delta;
         }
+
+		// radial
+		if (useY && useX) {
+
+			Vector3 targetVec = new Vector3 (data.position.x - startPos.x, data.position.y-startPos.y, 0f).normalized;		
+
+			newPos.x = MovementRange*targetVec.x;
+			newPos.y = MovementRange*targetVec.y;
+		}
         transform.position = new Vector3(startPos.x + newPos.x , startPos.y + newPos.y , startPos.z + newPos.z);
         UpdateVirtualAxes (transform.position);
     }
