@@ -56,7 +56,7 @@ public class Joystick : MonoBehaviour , IPointerUpHandler , IPointerDownHandler 
     }
 
 
-    public  void OnDrag(PointerEventData data) {
+    public void OnDrag(PointerEventData data) {
 
         Vector3 newPos = Vector3.zero;
 
