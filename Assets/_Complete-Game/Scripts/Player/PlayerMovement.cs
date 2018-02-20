@@ -40,9 +40,11 @@ namespace CompleteProject
         {
             // Store the input axes.
 			#if MOBILE_INPUT
+				// Virtual axes
 	            float h = CrossPlatformInputManager.GetAxisRaw("MoveX");
 	            float v = CrossPlatformInputManager.GetAxisRaw("MoveY");
 			#else
+				// Defined in Input Manager
 				float h = CrossPlatformInputManager.GetAxisRaw("Horizontal");
 				float v = CrossPlatformInputManager.GetAxisRaw("Vertical");
 			#endif 
@@ -96,6 +98,7 @@ namespace CompleteProject
                 playerRigidbody.MoveRotation (newRotatation);
             }
 #else
+			// Update move and fire directions
 			moveDir.x = CrossPlatformInputManager.GetAxisRaw("MoveX"); 
 			moveDir.y = 0f;
 			moveDir.z = CrossPlatformInputManager.GetAxisRaw("MoveY");
@@ -104,16 +107,17 @@ namespace CompleteProject
 			fireDir.y = 0f; 
 			fireDir.z = CrossPlatformInputManager.GetAxisRaw("FireY");
 
+			// Check for input on the fire direction, if none then the move direction sets the turn
 			if (fireDir == Vector3.zero) {
 	            if ( moveDir != Vector3.zero)
 	            {
-	                // Create a vector from the player to the point on the floor the raycast from the mouse hit.
+	                // Create a vector from the player to the direction of movement.
 	                Vector3 playerToMouse = (transform.position + moveDir) - transform.position;
 
 	                // Ensure the vector is entirely along the floor plane.
 	                playerToMouse.y = 0f;
 
-	                // Create a quaternion (rotation) based on looking down the vector from the player to the mouse.
+	                // Create a quaternion (rotation) based on the direction of movement.
 	                Quaternion newRotatation = Quaternion.LookRotation(playerToMouse);
 
 	                // Set the player's rotation to this new rotation.
@@ -121,13 +125,13 @@ namespace CompleteProject
 	            }
 			}
 			else {
-				// Create a vector from the player to the point on the floor the raycast from the mouse hit.
+				// Create a vector from the player to the direction of fire.
 				Vector3 playerToMouse = (transform.position + fireDir) - transform.position;
 
 				// Ensure the vector is entirely along the floor plane.
 				playerToMouse.y = 0f;
 
-				// Create a quaternion (rotation) based on looking down the vector from the player to the mouse.
+				// Create a quaternion (rotation) based on the direction of fire.
 				Quaternion newRotatation = Quaternion.LookRotation(playerToMouse);
 
 				// Set the player's rotation to this new rotation.

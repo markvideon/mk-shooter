@@ -24,12 +24,13 @@ public class Joystick : MonoBehaviour , IPointerUpHandler , IPointerDownHandler 
     private CrossPlatformInputManager.VirtualAxis verticalVirtualAxis;                 // Reference to the joystick in the cross platform input
     
 
-	private Vector3 targetVec;		
+	private Vector3 targetVec;			// Vector in direction where user has dragged a joystick	
+	private Vector3 draggedPosition;	// Stores position for where joystick has been dragged to
 
     void OnEnable () {
 
 		startPos = transform.position;
-
+		draggedPosition = new Vector3 (0f, 0f, 0f);
         CreateVirtualAxes ();
     }
 
@@ -63,7 +64,8 @@ public class Joystick : MonoBehaviour , IPointerUpHandler , IPointerDownHandler 
     public void OnDrag(PointerEventData data) {
         Vector3 newPos = Vector3.zero;
 
-		// radial
+		// Effectively follows the approach of the individual clamp approach but maintains
+		// Direction
 		if (useY && useX) {
 			
 			targetVec.x = data.position.x - startPos.x;
@@ -92,7 +94,11 @@ public class Joystick : MonoBehaviour , IPointerUpHandler , IPointerDownHandler 
 		}
 
 
-		transform.position = new Vector3(startPos.x + newPos.x , startPos.y + newPos.y , startPos.z + newPos.z);
+		// Recycling dragged position vector, updating with where user has dragged joystick to
+		draggedPosition.x = startPos.x + newPos.x;
+		draggedPosition.y = startPos.y + newPos.y;
+		draggedPosition.z = startPos.z + newPos.z;
+		transform.position  = draggedPosition;
 		UpdateVirtualAxes (transform.position);
 
 
