@@ -14,6 +14,9 @@ namespace CompleteProject
 #if !MOBILE_INPUT
         int floorMask;                      // A layer mask so that a ray can be cast just at gameobjects on the floor layer.
         float camRayLength = 100f;          // The length of the ray from the camera into the scene.
+#else
+		Vector3 moveDir;
+		Vector3 fireDir;
 #endif
 
         void Awake ()
@@ -21,6 +24,10 @@ namespace CompleteProject
 #if !MOBILE_INPUT
             // Create a layer mask for the floor layer.
             floorMask = LayerMask.GetMask ("Floor");
+#else
+			moveDir = new Vector3(CrossPlatformInputManager.GetAxisRaw("MoveX") , 0f , CrossPlatformInputManager.GetAxisRaw("MoveY"));
+			fireDir = new Vector3(CrossPlatformInputManager.GetAxisRaw("FireX") , 0f , CrossPlatformInputManager.GetAxisRaw("FireY"));
+
 #endif
 
             // Set up references.
@@ -32,8 +39,13 @@ namespace CompleteProject
         void FixedUpdate ()
         {
             // Store the input axes.
-            float h = CrossPlatformInputManager.GetAxisRaw("MoveX");
-            float v = CrossPlatformInputManager.GetAxisRaw("MoveY");
+			#if MOBILE_INPUT
+	            float h = CrossPlatformInputManager.GetAxisRaw("MoveX");
+	            float v = CrossPlatformInputManager.GetAxisRaw("MoveY");
+			#else
+				float h = CrossPlatformInputManager.GetAxisRaw("Horizontal");
+				float v = CrossPlatformInputManager.GetAxisRaw("Vertical");
+			#endif 
 
             // Move the player around the scene.
             Move (h, v);
@@ -84,8 +96,13 @@ namespace CompleteProject
                 playerRigidbody.MoveRotation (newRotatation);
             }
 #else
-            Vector3 moveDir = new Vector3(CrossPlatformInputManager.GetAxisRaw("MoveX") , 0f , CrossPlatformInputManager.GetAxisRaw("MoveY"));
-			Vector3 fireDir = new Vector3(CrossPlatformInputManager.GetAxisRaw("FireX") , 0f , CrossPlatformInputManager.GetAxisRaw("FireY"));
+			moveDir.x = CrossPlatformInputManager.GetAxisRaw("MoveX"); 
+			moveDir.y = 0f;
+			moveDir.z = CrossPlatformInputManager.GetAxisRaw("MoveY");
+
+			fireDir.x= CrossPlatformInputManager.GetAxisRaw("FireX");
+			fireDir.y = 0f; 
+			fireDir.z = CrossPlatformInputManager.GetAxisRaw("FireY");
 
 			if (fireDir == Vector3.zero) {
 	            if ( moveDir != Vector3.zero)

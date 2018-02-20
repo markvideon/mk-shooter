@@ -22,7 +22,10 @@ public class Joystick : MonoBehaviour , IPointerUpHandler , IPointerDownHandler 
     private bool useY;                                                          // Toggle for using the Y axis
     private CrossPlatformInputManager.VirtualAxis horizontalVirtualAxis;               // Reference to the joystick in the cross platform input
     private CrossPlatformInputManager.VirtualAxis verticalVirtualAxis;                 // Reference to the joystick in the cross platform input
-     
+    
+
+	private Vector3 targetVec;		
+
     void OnEnable () {
 
 		startPos = transform.position;
@@ -63,7 +66,11 @@ public class Joystick : MonoBehaviour , IPointerUpHandler , IPointerDownHandler 
 		// radial
 		if (useY && useX) {
 			
-			Vector3 targetVec = new Vector3 (data.position.x - startPos.x, data.position.y-startPos.y, 0f).normalized;		
+			targetVec.x = data.position.x - startPos.x;
+			targetVec.y = data.position.y - startPos.y; 
+			targetVec.z = 0f; 
+				
+			targetVec = targetVec.normalized;		
 
 			newPos.x = MovementRange*targetVec.x;
 			newPos.y = MovementRange*targetVec.y;
