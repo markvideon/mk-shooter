@@ -30,6 +30,7 @@ public class Joystick : MonoBehaviour , IPointerUpHandler , IPointerDownHandler 
     void OnEnable () {
 
 		startPos = transform.position;
+		targetVec = new Vector3 (0f, 0f, 0f);
 		draggedPosition = new Vector3 (0f, 0f, 0f);
         CreateVirtualAxes ();
     }
