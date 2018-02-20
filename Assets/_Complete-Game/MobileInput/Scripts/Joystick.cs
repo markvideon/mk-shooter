@@ -22,10 +22,11 @@ public class Joystick : MonoBehaviour , IPointerUpHandler , IPointerDownHandler 
     private bool useY;                                                          // Toggle for using the Y axis
     private CrossPlatformInputManager.VirtualAxis horizontalVirtualAxis;               // Reference to the joystick in the cross platform input
     private CrossPlatformInputManager.VirtualAxis verticalVirtualAxis;                 // Reference to the joystick in the cross platform input
-      
+     
     void OnEnable () {
 
-        startPos = transform.position;
+		startPos = transform.position;
+
         CreateVirtualAxes ();
     }
 
@@ -59,34 +60,42 @@ public class Joystick : MonoBehaviour , IPointerUpHandler , IPointerDownHandler 
     public void OnDrag(PointerEventData data) {
         Vector3 newPos = Vector3.zero;
 
-        if (useX) {
-            int delta = (int) (data.position.x - startPos.x);
-            delta = Mathf.Clamp(delta,  - MovementRange,  MovementRange);
-            newPos.x = delta;
-        }
-
-        if (useY)
-        {
-            int delta = (int)(data.position.y - startPos.y);
-            delta = Mathf.Clamp(delta, -MovementRange,  MovementRange);
-            newPos.y = delta;
-        }
-
 		// radial
 		if (useY && useX) {
-
+			
 			Vector3 targetVec = new Vector3 (data.position.x - startPos.x, data.position.y-startPos.y, 0f).normalized;		
 
 			newPos.x = MovementRange*targetVec.x;
 			newPos.y = MovementRange*targetVec.y;
+		}  
+		else 
+		{
+			if (useX) {
+				int delta = (int) (data.position.x - startPos.x);
+				delta = Mathf.Clamp(delta,  - MovementRange,  MovementRange);
+				newPos.x = delta;
+			}
+
+			if (useY)
+			{
+				int delta = (int)(data.position.y - startPos.y);
+				delta = Mathf.Clamp(delta, -MovementRange,  MovementRange);
+				newPos.y = delta;
+			}
 		}
-        transform.position = new Vector3(startPos.x + newPos.x , startPos.y + newPos.y , startPos.z + newPos.z);
-        UpdateVirtualAxes (transform.position);
+
+
+		transform.position = new Vector3(startPos.x + newPos.x , startPos.y + newPos.y , startPos.z + newPos.z);
+		UpdateVirtualAxes (transform.position);
+
+
+
     }
 
 
     public  void OnPointerUp(PointerEventData data)
     {
+
         transform.position = startPos;
         UpdateVirtualAxes (startPos);
     }
